@@ -1,12 +1,11 @@
-
+# Pippa's Code  -----------------------------------------------------------------
 library(ggplot2)
 
-# insect data has ants and hymentopra together
-# edge has them seperately
-# raw edge is raw data
+# "insect" data has ants and hymentopra together
+# "edge" has them seperately
+# "raw" edge is raw data
 
-# Abiotic -----------------------------------------------------------------
-
+# Abiotic variables -----------------------------------------------------------------
 
 # boxplot for PAR 
 
@@ -72,26 +71,31 @@ anova(mod6) # not signficant
 
 
 # looking at how inverts and plant diversity effect eachother 
-# plant diversity explains invert diversity 
+# does plant diversity explains invert diversity 
 plot(invert_shannons ~ plant_shannons, data= edge)
 mod7 <- lm(invert_shannons ~ plant_shannons, data= edge) # signifcant 
 anova(mod7)
 summary(mod7)
 plot(mod7) # these assumptions are not met, so can not use a linear model!!!!!
 
-#### spearmans for plants and insect diversity to see if relationship instead of anova. 
+#### use a spearmans for plants and insect diversity to see if relationship instead of anova. 
 cor.test(edge$invert_shannons, edge$plant_shannons, data= edge, method= 'spearman', exact= FALSE)
+# still not great 
 
+# look at true diversity 
 plot(invert_D~plant_D, data= edge)
 mod11 <- lm(invert_D ~ plant_D, data= edge) 
 anova(mod11) # not signficant. 
 summary(mod11)
 
-# looking at effect of moitsure 
+
+
+# looking at effect of moitsure on plant diversity
 plot(plant_shannons ~ moisture, data=edge)
 mod8 <- lm(plant_shannons ~ moisture, data= edge) 
 anova(mod8) # signifcant
 
+# looking at effect of moisture on invert diversity 
 plot(invert_shannons ~ moisture, data=edge)
 mod9 <- lm(invert_shannons ~ moisture, data= edge) 
 anova(mod9) # not signficant 
