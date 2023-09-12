@@ -1,2 +1,2 @@
-# poster
-Code for poster Edge effects group 
+# Poster
+Code for poster edge effects group 
