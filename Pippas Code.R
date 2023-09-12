@@ -59,19 +59,19 @@ plant_div[1:13,]
 # relationship between plant diversity and distance
 
 (plantD_boxplot <- ggplot(all_data, aes(x = factor(quad), y = plant_div)) +     
-  geom_boxplot(aes(fill = factor(quad))) +  # Convert QUAD to a factor here
-  theme_bw() +   
-  geom_point()+
-  stat_boxplot(geom ='errorbar') + 
-  scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
-  scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
-  ylab("Plant Shannons Diversity (H')") +                                
-  xlab("\nPosition")  +   
-  theme(axis.text = element_text(size = 12),         
-        axis.title = element_text(size = 14, face = "plain"),                      
-        panel.grid = element_blank(),                                                     
-        plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
-        legend.position = "none")) 
+   geom_boxplot(aes(fill = factor(quad))) +  # Convert QUAD to a factor here
+   theme_bw() +   
+   geom_point()+
+   stat_boxplot(geom ='errorbar') + 
+   scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+   scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+   ylab("Plant Shannons Diversity (H')") +                                
+   xlab("\nPosition")  +   
+   theme(axis.text = element_text(size = 12),         
+         axis.title = element_text(size = 14, face = "plain"),                      
+         panel.grid = element_blank(),                                                     
+         plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+         legend.position = "none")) 
 
 # relationship between insect diversity and distance
 
@@ -150,5 +150,3 @@ mod10 <- lm(par ~ quad, data= all_data)
 anova(mod10) # not signifcant
 plot(mod10)
 all_data$quad <- as.numeric(all_data$quad)
-
-
