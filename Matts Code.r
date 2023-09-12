@@ -1,5 +1,7 @@
 # Trying NMDS ----
+library(tidyverse)
 library(vegan)
+
 raw <- read.csv("C:/Users/prill/Documents/a_uni/4th Year/semester_1/Field Course and Stats/edge_effects_proj/raw.csv")
 # quad vs plant div
 raw_plant <- raw[-14,]
@@ -113,7 +115,7 @@ NMDS_plot_2
 raw_insect_antless <- raw
 raw_insect_antless$quad <- as.factor(raw_insect_antless$quad)
 as.data.frame(colnames(raw_insect_antless))  # see column no.
-insect_div_antless <- raw_insect_comb[,c(47:49,51:63)]
+insect_div_antless <- raw_insect_antless[,c(47:49,51:63)]
 
 insect_div_antless[is.na(insect_div_antless)] <- 0 # Replace NA values with 0
 
