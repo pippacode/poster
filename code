@@ -1,0 +1,249 @@
+
+library(ggplot2)
+
+# insect data has ants and hymentopra together
+# edge has them seperately
+# raw edge is raw data
+
+# Abiotic -----------------------------------------------------------------
+
+
+# boxplot for PAR 
+
+boxplot(par ~ site + transect, data= raw_edge)
+anova(lm(par ~ site + transect, data= raw_edge))
+# not singigcant- meaning time of day that PAR was taken is not signifcant so do not need to standardise
+
+ggplot(raw_edge, aes(x = factor(quad), y = par)) +
+  geom_boxplot() +
+  labs(x = "Distance along transect", y = "PAR (μmol/s)") +
+  theme_classic()
+
+# boxplot for soil moist
+ggplot(raw_edge, aes(x = factor(quad), y = soil_moist)) +
+  geom_boxplot() +
+  labs(x = "Distance along transect", y = "Soil Moisture") +
+  theme_classic()
+
+# soil pH
+ggplot(raw_edge, aes(x = factor(quad), y = soil_ph)) +
+  geom_boxplot() +
+  labs(x = "Distance along transect", y = "Soil pH") +
+  theme_classic()
+############# only has 2 sites worth of data*******
+
+
+
+# Biotic ------------------------------------------------------------------
+
+plot(invert_D ~ plant_D, data= edge)
+boxplot(invert_D ~ QUAD, data= edge)
+boxplot(plant_D ~ QUAD, data= edge)
+boxplot(plant_shannons ~ QUAD, data= edge)
+boxplot(invert_shannons ~ QUAD, data= edge)
+
+boxplot(par ~ Site + Transect, data= edge)
+anova(lm(par ~ Site + Transect, data= edge)) # time of day not significant to PAR
+
+##### looking at effect of par on insect and plant diversity
+plot(plant_shannons ~ par, data= edge)
+mod1 <- lm(plant_shannons ~ par, data= edge) 
+anova(mod1) # signifcant
+
+plot(invert_shannons ~ par, data=edge)
+mod2 <- lm(invert_shannons ~ par, data=edge)
+anova(mod2) # signifcant 
+
+mod3 <- lm(invert_shannons ~ plant_shannons * par, data=edge)
+anova(mod3) # signficant w plants but not par
+
+
+plot(invert_shannons ~ avg_height, data= edge)
+mod4 <- lm(invert_shannons ~ avg_height, data= edge) 
+anova(mod4) # not signficant
+
+mod5<- lm(invert_shannons ~ deadwood, data=edge)
+anova(mod5) # not signficant
+
+mod6 <- lm(invert_shannons ~ bare_ground, data=edge)
+anova(mod6) # not signficant
+
+
+
+
+# looking at how inverts and plant diversity effect eachother 
+# plant diversity explains invert diversity 
+plot(invert_shannons ~ plant_shannons, data= edge)
+mod7 <- lm(invert_shannons ~ plant_shannons, data= edge) # signifcant 
+anova(mod7)
+summary(mod7)
+plot(mod7) # these assumptions are not met, so can not use a linear model!!!!!
+
+#### spearmans for plants and insect diversity to see if relationship instead of anova. 
+cor.test(edge$invert_shannons, edge$plant_shannons, data= edge, method= 'spearman', exact= FALSE)
+
+plot(invert_D~plant_D, data= edge)
+mod11 <- lm(invert_D ~ plant_D, data= edge) 
+anova(mod11) # not signficant. 
+summary(mod11)
+
+# looking at effect of moitsure 
+plot(plant_shannons ~ moisture, data=edge)
+mod8 <- lm(plant_shannons ~ moisture, data= edge) 
+anova(mod8) # signifcant
+
+plot(invert_shannons ~ moisture, data=edge)
+mod9 <- lm(invert_shannons ~ moisture, data= edge) 
+anova(mod9) # not signficant 
+
+
+
+
+# Boxplots for poster -----------------------------------------------------
+
+# relationship between plant diversity and distance
+
+(plantD_boxplot <- ggplot(edge, aes(x = factor(QUAD), y = plant_shannons)) +     
+    geom_boxplot(aes(fill = factor(QUAD))) +  # Convert QUAD to a factor here
+    theme_bw() +   
+    geom_point()+
+    stat_boxplot(geom ='errorbar') + 
+    scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+    scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+    ylab("Plant Shannons Diversity (H')") +                                
+    xlab("\nPosition")  +   
+    theme(axis.text = element_text(size = 12),         
+          axis.title = element_text(size = 14, face = "plain"),                      
+          panel.grid = element_blank(),                                                     
+          plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+          legend.position = "none")) 
+
+# relationship between insect diversity and distance
+
+(plantD_boxplot <- ggplot(insect, aes(x = factor(QUAD), y = invert_shannons)) +     
+    geom_boxplot(aes(fill = factor(QUAD))) +  # Convert QUAD to a factor here
+    theme_bw() +  
+    geom_point()+
+    stat_boxplot(geom ='errorbar') + 
+    scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+    scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+    ylab("Invertebrate Shannons Diversity (H')") +                                
+    xlab("\nPosition")  +   
+    theme(axis.text = element_text(size = 12),         
+          axis.title = element_text(size = 14, face = "plain"),                      
+          panel.grid = element_blank(),                                                     
+          plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+          legend.position = "none")) 
+
+# relationship between PAR and distance
+
+(plantD_boxplot <- ggplot(edge, aes(x = factor(QUAD), y = par)) +     
+    geom_boxplot(aes(fill = factor(QUAD))) +  # Convert QUAD to a factor here
+    theme_bw() +  
+    geom_point()+
+    stat_boxplot(geom ='errorbar') + 
+    scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+    scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+    ylab("PAR") +                                
+    xlab("\nPosition")  +   
+    theme(axis.text = element_text(size = 12),         
+          axis.title = element_text(size = 14, face = "plain"),                      
+          panel.grid = element_blank(),                                                     
+          plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+          legend.position = "none")) 
+
+
+############# mositure vs distance
+(plantD_boxplot <- ggplot(edge, aes(x = factor(QUAD), y = moisture)) +     
+    geom_boxplot(aes(fill = factor(QUAD))) +  # Convert QUAD to a factor here
+    theme_bw() +  
+    geom_point()+
+    stat_boxplot(geom ='errorbar') + 
+    scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+    scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+    ylab("Soil moisture") +                                
+    xlab("\nPosition")  +   
+    theme(axis.text = element_text(size = 12),         
+          axis.title = element_text(size = 14, face = "plain"),                      
+          panel.grid = element_blank(),                                                     
+          plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+          legend.position = "none")) 
+
+mod13 <- lm(moisture ~ QUAD, data= edge)
+anova(mod13)
+
+############# pH vs distance
+(plantD_boxplot <- ggplot(raw_edge, aes(x = factor(quad), y = soil_ph)) +     
+    geom_boxplot(aes(fill = factor(quad))) +  # Convert QUAD to a factor here
+    theme_bw() +  
+    geom_point()+
+    stat_boxplot(geom ='errorbar') + 
+    scale_fill_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +                   
+    scale_colour_manual(values = c("#009E73", "#56B4E9", "#F0E442", "#56B4E9", "#009E73")) +  
+    ylab("Soil pH") +                                
+    xlab("\nPosition")  +   
+    theme(axis.text = element_text(size = 12),         
+          axis.title = element_text(size = 14, face = "plain"),                      
+          panel.grid = element_blank(),                                                     
+          plot.margin = unit(c(1,1,1,1), units = "cm"),  # Added units argument                   
+          legend.position = "none")) 
+
+mod14 <- lm(soil_ph ~ quad, data= raw_edge)
+anova(mod14)
+
+############# plant height and invert diversity
+plot(invert_shannons ~ avg_height, data= edge, xlab="Average Plant Height (cm)", ylab= "Invertebrate Shannons Diversity (H')", col= "#56B4E9", pch = 19)
+abline(lm(invert_shannons ~ avg_height, data= edge))
+mod12 <- lm(invert_shannons ~ avg_height, data= edge)
+anova(mod12)
+
+
+### see if can use insect data 
+#### plant diveristy vs soil mositure
+plot(plant_shannons ~ avg_height, data= edge, xlab="Average Plant Height (cm)", ylab= "Invertebrate Shannons Diversity (H')", col= "#56B4E9", pch = 19)
+abline(lm(invert_shannons ~ avg_height, data= edge))
+mod12 <- lm(invert_shannons ~ avg_height, data= edge)
+anova(mod12)
+
+### plant diversity vs soil ph
+
+#### invert diversity vs soil mositure
+
+#### invert diversity vs soil ph
+
+
+# Linear models -----------------------------------------------------------
+
+# does distance explain plant diversity= SIGNIFICANT
+edge$QUAD <- as.factor(edge$QUAD)
+plot(plant_shannons ~ QUAD, data= edge)
+mod8 <- lm(plant_shannons ~ QUAD, data= edge) 
+anova(mod8)# significant
+summary(mod8)
+plot(mod8)
+edge$QUAD <- as.numeric(edge$QUAD)
+# plant diversity is significantly explained by distance (LM: F(4,34)=2.93, p=0.035)
+# post hoc, only do it for significant things !!!
+# post hoc:
+install.packages("emmeans")
+library(emmeans)
+
+emmeans(mod8,pairwise ~ QUAD, adjust= NULL)
+# post hoc with no multiple comparison adjustment, no tukey adjustment showed this:
+
+
+# does distance explain invert diversity = NOT SIGNIFICANT
+insect$QUAD <- as.factor(insect$QUAD)
+plot(invert_shannons ~ QUAD, data= insect)
+mod9 <- lm(invert_shannons ~ QUAD, data= insect) 
+anova(mod9) # not signifcant
+plot(mod9)
+insect$QUAD <- as.numeric(insect$QUAD)
+
+################ scactterplot for plant diversity and invert diversity relationship 
+plot(invert_shannons ~ plant_shannons, data= insect, xlab="Plant Shannons Diversity (H')", ylab= "Invertebrate Shannons Diversity (H')", col= "#56B4E9", pch = 19)
+abline(lm(invert_shannons ~ plant_shannons, data= insect))
+
+#### spearmans for plants and insect diversity to see if relationship instead of anova. 
+cor.test(insect$invert_shannons, insect$plant_shannons, data= insect, method= 'spearman', exact= FALSE)
+# use chat gpt to explain result of this 
