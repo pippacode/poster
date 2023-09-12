@@ -1,4 +1,5 @@
-# Poster- Changes in plant and invertebrate diversity and composition across the forest edge
+# Code for Poster: Edge Effects 
+## Changes in plant and invertebrate diversity and composition across the forest edge
 
 
 - Matts code: contains code for the NMDS graphs
