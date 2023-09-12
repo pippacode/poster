@@ -100,7 +100,7 @@ plot(invert_shannons ~ moisture, data=edge)
 mod9 <- lm(invert_shannons ~ moisture, data= edge) 
 anova(mod9) # not signficant 
 
-
+#### not much point including since moisture does not singifcantly vary w distance
 
 
 # Boxplots for poster -----------------------------------------------------
@@ -174,9 +174,9 @@ anova(mod9) # not signficant
           legend.position = "none")) 
 
 mod13 <- lm(moisture ~ QUAD, data= edge)
-anova(mod13)
+anova(mod13)  # not signficant 
 
-############# pH vs distance
+############# pH vs distance graph 
 (plantD_boxplot <- ggplot(raw_edge, aes(x = factor(quad), y = soil_ph)) +     
     geom_boxplot(aes(fill = factor(quad))) +  # Convert QUAD to a factor here
     theme_bw() +  
@@ -193,27 +193,15 @@ anova(mod13)
           legend.position = "none")) 
 
 mod14 <- lm(soil_ph ~ quad, data= raw_edge)
-anova(mod14)
+anova(mod14) # not signficant 
 
-############# plant height and invert diversity
+
+
+############# plant height and invert diversity scatterplot
 plot(invert_shannons ~ avg_height, data= edge, xlab="Average Plant Height (cm)", ylab= "Invertebrate Shannons Diversity (H')", col= "#56B4E9", pch = 19)
 abline(lm(invert_shannons ~ avg_height, data= edge))
 mod12 <- lm(invert_shannons ~ avg_height, data= edge)
-anova(mod12)
-
-
-### see if can use insect data 
-#### plant diveristy vs soil mositure
-plot(plant_shannons ~ avg_height, data= edge, xlab="Average Plant Height (cm)", ylab= "Invertebrate Shannons Diversity (H')", col= "#56B4E9", pch = 19)
-abline(lm(invert_shannons ~ avg_height, data= edge))
-mod12 <- lm(invert_shannons ~ avg_height, data= edge)
-anova(mod12)
-
-### plant diversity vs soil ph
-
-#### invert diversity vs soil mositure
-
-#### invert diversity vs soil ph
+anova(mod12)  ## not signifcant  
 
 
 # Linear models -----------------------------------------------------------
@@ -228,10 +216,9 @@ plot(mod8)
 edge$QUAD <- as.numeric(edge$QUAD)
 # plant diversity is significantly explained by distance (LM: F(4,34)=2.93, p=0.035)
 # post hoc, only do it for significant things !!!
-# post hoc:
+################### POST HOC:
 install.packages("emmeans")
 library(emmeans)
-
 emmeans(mod8,pairwise ~ QUAD, adjust= NULL)
 # post hoc with no multiple comparison adjustment, no tukey adjustment showed this:
 
